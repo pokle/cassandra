@@ -17,8 +17,9 @@ RUN echo 'gpgcheck = 0' >> /etc/yum.repos.d/datastax.repo
 
 RUN yum install -y dsc20
 
-ADD etc-cassandra-conf /etc/cassandra-conf
+ADD usr-local-bin/reconfig-and-start.sh /usr/local/bin/reconfig-and-start.sh
+#ADD etc-cassandra-conf /etc/cassandra-conf
 
 EXPOSE 9160 7000 7001
 USER cassandra
-CMD /usr/sbin/cassandra -f
+CMD /usr/local/bin/reconfig-and-start.sh
