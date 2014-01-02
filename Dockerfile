@@ -1,0 +1,22 @@
+# Following instructions at http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installDeb_t.html
+
+# Base operating system image
+FROM centos
+
+# Plus java - which doesn't come out of the box
+RUN yum install -y java-1.7.0-openjdk-devel.x86_64
+
+# ADD busts the cache, so lets just resort to this pain
+# to speed up the build until this bug is fixed and available on CoreOS
+#  https://github.com/dotcloud/docker/issues/880
+RUN echo '[datastax]' > /etc/yum.repos.d/datastax.repo
+RUN echo 'name = DataStax Repo for Apache Cassandra' >> /etc/yum.repos.d/datastax.repo
+RUN echo 'baseurl = http://rpm.datastax.com/community' >> /etc/yum.repos.d/datastax.repo
+RUN echo 'enabled = 1' >> /etc/yum.repos.d/datastax.repo
+RUN echo 'gpgcheck = 0' >> /etc/yum.repos.d/datastax.repo
+
+RUN yum install -y dsc20
+
+EXPOSE 9160
+USER cassandra
+CMD /usr/sbin/cassandra -f
