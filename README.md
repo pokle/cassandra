@@ -6,10 +6,9 @@ This is a collection of scripts to help you run Cassandra in Docker containers.
 - Currently supported:
 	- A single server container for development
 	- A single client container to run client tools such as cqlsh, nodetool, etc.
+	- A small cluster for development - running on a single Docker host
 
 - Work in progress:
-	- A small cluster for development - running on a single Docker host
-		- The missing puzzle piece here is telling cassandra how to find its peers (seeds). Docker assigns dynamic IP addresses.
 	- A small cluster for production - running on multiple Docker hosts
 		- The missing puzzle piece here is how to expose Cassandra on the real outside network so that peers running on different hosts can connect.
 
@@ -30,17 +29,17 @@ Build the poklet/cassandra docker image (optional)
 This step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes.
 
 
-Begin: Launch a single Cassandra server container for development
------------------------------------------------------------------
+Single container
+----------------
 
-1. Launch a server:
+1. Launch a server called cass1:
 
-		CASSANDRA_CONTAINER=$(docker run -d poklet/cassandra)
-		IP=$(docker inspect -format '{{ .NetworkSettings.IPAddress }}' $CASSANDRA_CONTAINER)
+		docker run -d -name cass1 poklet/cassandra
 
 2. Connect to it:
 
-		docker run -i -t poklet/cassandra cqlsh $IP
+		CASS1_IP=$(./ipof.sh cass1)
+		docker run -i -t poklet/cassandra cqlsh $CASS1_IP
 	
 
 You should see something like:
@@ -52,3 +51,46 @@ You should see something like:
 
 
 
+Cluster on the same docker host
+-------------------------------
+
+1. Launch two containers
+
+		docker run -d -name cass1 poklet/cassandra start.sh
+		docker run -d -name cass2 poklet/cassandra start.sh $(./ipof.sh cass1)
+
+	start.sh is passed the list of seeds - in this case, just cass1
+
+2. Create some data on the first container
+
+	Start up cqlsh
+
+		docker run -i -t poklet/cassandra cqlsh $(./ipof.sh cass1)
+
+	Paste this in:
+
+		create keyspace demo with replication = {'class':'SimpleStrategy', 'replication_factor':2};
+		use demo;
+		create table names ( id int primary key, name text );
+		insert into names (id,name) values (1, 'gibberish');
+		quit
+
+3. Connect to the second container, and check if it can see your data
+
+	Start up cqlsh (on cass2 this time)
+
+		docker run -i -t poklet/cassandra cqlsh $(./ipof.sh cass2)
+
+	Paste in:
+
+		select * from demo.names
+
+	You should see:
+
+		cqlsh> select * from demo.names;
+
+		 id | name
+		----+-----------
+		  1 | gibberish
+
+		(1 rows)
