@@ -83,7 +83,7 @@ Cluster on the same docker host
 
 	Paste in:
 
-		select * from demo.names
+		select * from demo.names;
 
 	You should see:
 
