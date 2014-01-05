@@ -3,8 +3,8 @@
 # Base operating system image
 FROM centos
 
-# Plus java - which doesn't come out of the box
-RUN yum install -y java-1.7.0-openjdk-devel.x86_64
+# Plus some packages
+RUN yum install -y java-1.7.0-openjdk-devel.x86_64 which
 
 # ADD busts the cache, so lets just resort to this pain
 # to speed up the build until this bug is fixed and available on CoreOS
