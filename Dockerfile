@@ -21,4 +21,4 @@ ADD src/start.sh /usr/local/bin/start.sh
 
 EXPOSE 9160 7000 7001 7199
 USER cassandra
-CMD /usr/local/bin/start.sh
+CMD start.sh
