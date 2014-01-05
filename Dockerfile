@@ -19,6 +19,6 @@ ENV HOME /home/cassandra
 
 ADD src/start.sh /usr/local/bin/start.sh
 
-EXPOSE 9160 7000 7001 7199
+EXPOSE 9160 7000 7001 9042 7199
 USER cassandra
 CMD start.sh
