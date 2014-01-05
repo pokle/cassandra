@@ -40,7 +40,7 @@ Begin: Launch a single Cassandra server container for development
 
 2. Connect to it:
 
-		docker run -i -t poklet/cassandra bash -c "HOME=/tmp cqlsh $IP"
+		docker run -i -t poklet/cassandra cqlsh $IP
 	
 
 You should see something like:
