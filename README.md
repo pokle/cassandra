@@ -65,7 +65,7 @@ Cluster on the same docker host
 
 	Start up cqlsh
 
-		docker run -i -t poklet/cassandra cqlsh $(./ipof.sh cass1)
+		docker run -rm -i -t poklet/cassandra cqlsh $(./ipof.sh cass1)
 
 	Paste this in:
 
@@ -79,7 +79,7 @@ Cluster on the same docker host
 
 	Start up cqlsh (on cass2 this time)
 
-		docker run -i -t poklet/cassandra cqlsh $(./ipof.sh cass2)
+		docker run -rm -i -t poklet/cassandra cqlsh $(./ipof.sh cass2)
 
 	Paste in:
 
