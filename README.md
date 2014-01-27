@@ -160,9 +160,8 @@ A 5 cluster test on the same docker host
 		sudo docker run -rm -i -t poklet/cassandra cqlsh $(./ipof.sh cass2)
  			select * from demo.names;
 
-Using nodetool on the previous example 
+Using nodetool on the previous example (you need your own build to do it)
 --------------------------------------------------
-Note: You need to build your image using the new src/start.sh file to do it.
 
 		sudo docker run -rm -i -t <yourusername>/cassandra nodetool status -h $(./ipof.sh cass1)
 
