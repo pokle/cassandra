@@ -28,7 +28,6 @@ Build the poklet/cassandra docker image (optional)
 
 This step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes.
 
-
 Single container
 ----------------
 
