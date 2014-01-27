@@ -95,6 +95,7 @@ Cluster on the same docker host
 
 		(1 rows)
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 A 5 cluster test on the same docker host
 ----------------------------------------
@@ -165,3 +166,5 @@ Using nodetool on the previous example (you need your own build to do it)
 
 		sudo docker run -rm -i -t <yourusername>/cassandra nodetool status -h $(./ipof.sh cass1)
 
+=======
+>>>>>>> parent of bea7eca... chaging readme
