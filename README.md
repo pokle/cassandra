@@ -22,12 +22,11 @@ A host running Docker 0.7.2+
 - I test on either CoreOS or Docker's Ubuntu on EC2 / Vagrant
 - But really, any Linux distribution should do
 
-Build the <yourusername>/cassandra docker image 
-	
-    sudo docker build -t <yourusername>/cassandra .
+Build the poklet/cassandra docker image (optional)
 
-This step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes. Atm, if you need nodetool you need to create your own build.
+	./build.sh
 
+This step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes.
 
 Single container
 ----------------
