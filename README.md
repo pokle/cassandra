@@ -94,6 +94,7 @@ Cluster on the same docker host
 		  1 | gibberish
 
 		(1 rows)
+<<<<<<< HEAD
 
 A 5 cluster test on the same docker host
 ----------------------------------------
