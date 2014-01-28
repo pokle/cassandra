@@ -17,16 +17,25 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-A host running Docker 0.7.2+
+- A host running Docker 0.7.2+
+- You need to be able to run the docker command successfully as the currently logged in user. For example:
 
-- I test on either CoreOS or Docker's Ubuntu on EC2 / Vagrant
-- But really, any Linux distribution should do
+		➤ docker version
+		Client version: 0.7.4
+		Go version (client): go1.2
+		Git commit (client): 010d74e
+		Server version: 0.7.6
+		Git commit (server): bc3b2ec
+		Go version (server): go1.2
+		Last stable version: 0.7.6, please update docker
+
+- If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
 
 Build the poklet/cassandra docker image (optional)
 
-	./build.sh
+		./build.sh
 
-This step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes.
+This last step is optional, because Docker will pull the image from https://index.docker.io if you don't already have it. If you modify the scripts, this is how you can re-build the image with your changes.
 
 
 Single container
