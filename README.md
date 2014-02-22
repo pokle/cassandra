@@ -20,7 +20,7 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-- A host running Docker 0.7.2+
+- A host running Docker
 - You need to be able to run the docker command successfully as the currently logged in user. For example:
 
 		$ docker version
@@ -34,15 +34,12 @@ Prerequisites
 
 - If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
 
-Build the poklet/cassandra docker image (optional):
+Build the docker and opscenter images (optional)
 
-	pushd cassandra && docker build -t poklet/cassandra . && popd
+  ./cassandra/build.sh
+  ./opscenter/build.sh
 
-Build the poklet/opscenter docker image (optional):
-
-	pushd opscenter && docker build -t poklet/opscenter . && popd
-
-These 2 last steps are optional because Docker will automatically pull the image from [index.docker.io](https://index.docker.io) if you don't already have it. The build process needs an internet connexion but it is executed only once and then cached on Docker. If you modify the scripts, this is how you can re-build the image with your changes.
+This steps is optional because Docker will automatically pull the images from [index.docker.io](https://index.docker.io) if you don't already have them. The build process needs an Internet connection, but it is executed only once and then cached on Docker. If you modify the scripts, this is how you can re-build the images with your changes.
 
 
 Single Cassandra node
