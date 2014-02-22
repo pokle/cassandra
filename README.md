@@ -20,26 +20,21 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-- A host running Docker
+- A host running Docker - See https://www.docker.io/gettingstarted/#h_installation
 - You need to be able to run the docker command successfully as the currently logged in user. For example:
 
 		$ docker version
 		Client version: 0.7.4
-		Go version (client): go1.2
-		Git commit (client): 010d74e
-		Server version: 0.7.6
-		Git commit (server): bc3b2ec
-		Go version (server): go1.2
-		Last stable version: 0.7.6, please update docker
-
+    ...
+    
 - If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
 
-Build the docker and opscenter images (optional)
+- Build the docker and opscenter images (optional)
 
     ./cassandra/build.sh
     ./opscenter/build.sh
 
-This steps is optional because Docker will automatically pull the images from [index.docker.io](https://index.docker.io) if you don't already have them. The build process needs an Internet connection, but it is executed only once and then cached on Docker. If you modify the scripts, this is how you can re-build the images with your changes.
+The last step is optional because Docker will automatically pull the images from [index.docker.io](https://index.docker.io) if you don't already have them. The build process needs an Internet connection, but it is executed only once and then cached on Docker. If you modify the scripts, this is how you can re-build the images with your changes.
 
 
 Single Cassandra node
@@ -116,48 +111,49 @@ You should see something like:
 
 10-node Cassandra cluster (scripted!)
 -------------------------------------
-Right, lets dive right in with some shell scripts in the scripts directory to help us:
 
-    ./scripts/run.sh 10
+1. Right, lets dive right in with some shell scripts in the scripts directory to help us:
 
-That will start 10 nodes. Lets see what they're called:
+        ./scripts/run.sh 10
 
-    ./scripts/ips.sh
+2. That will start 10 nodes. Lets see what they're called:
 
-    172.17.0.10 cass6
-    172.17.0.12 cass4
-    172.17.0.11 cass5
-    172.17.0.6 cass10
-    172.17.0.7 cass9
-    172.17.0.9 cass7
-    172.17.0.8 cass8
-    172.17.0.4 cass2
-    172.17.0.3 cass3
-    172.17.0.2 cass1
+        ./scripts/ips.sh
 
-Same, but with the nodetool:
+        172.17.0.10 cass6
+        172.17.0.12 cass4
+        172.17.0.11 cass5
+        172.17.0.6 cass10
+        172.17.0.7 cass9
+        172.17.0.9 cass7
+        172.17.0.8 cass8
+        172.17.0.4 cass2
+        172.17.0.3 cass3
+        172.17.0.2 cass1
 
-    ./scripts/nodetool.sh cass1 status
+3. Same, but with the nodetool:
 
-    Datacenter: datacenter1
-    =======================
-    Status=Up/Down
-    |/ State=Normal/Leaving/Joining/Moving
-    --  Address      Load       Tokens  Owns (effective)  Host ID                               Rack
-    UN  172.17.0.11  74.19 KB   256     21.4%             dfd44ca5-bf73-4487-bcb2-db882d0a9231  rack1
-    UN  172.17.0.10  74.21 KB   256     19.6%             f479a4e6-55ac-4533-8ce5-d137a93f2cc4  rack1
-    UN  172.17.0.9   74.34 KB   256     20.4%             0bb389a0-f111-459c-9620-0faccc75cbc0  rack1
-    UN  172.17.0.8   74.19 KB   256     20.1%             2eb4a4dd-2bbc-46a3-9f64-4e761509307d  rack1
-    UN  172.17.0.12  74.14 KB   256     20.2%             a2547289-0c6a-458f-b982-823711c5293e  rack1
-    UN  172.17.0.3   74.19 KB   256     20.3%             3667cc1a-1f63-4cd1-bebc-841f428a0f4d  rack1
-    UN  172.17.0.2   74.24 KB   256     20.3%             2b48c8ac-ad68-48a0-9c41-c8f2fb7f38e6  rack1
-    UN  172.17.0.7   67.7 KB    256     19.2%             e361f6d8-28ef-4cf8-baa1-88c2d1fec094  rack1
-    UN  172.17.0.6   74.15 KB   256     19.6%             230f13b1-a27b-44e8-9b51-5ebdb1c4cb13  rack1
-    UN  172.17.0.4   74.18 KB   256     18.8%             6c90cbaa-e5b3-41de-a160-3ecaf59b8856  rack1
+        ./scripts/nodetool.sh cass1 status
 
-When you're tired of your cluster, nuke them with:
+        Datacenter: datacenter1
+        =======================
+        Status=Up/Down
+        |/ State=Normal/Leaving/Joining/Moving
+        --  Address      Load       Tokens  Owns (effective)  Host ID                               Rack
+        UN  172.17.0.11  74.19 KB   256     21.4%             dfd44ca5-bf73-4487-bcb2-db882d0a9231  rack1
+        UN  172.17.0.10  74.21 KB   256     19.6%             f479a4e6-55ac-4533-8ce5-d137a93f2cc4  rack1
+        UN  172.17.0.9   74.34 KB   256     20.4%             0bb389a0-f111-459c-9620-0faccc75cbc0  rack1
+        UN  172.17.0.8   74.19 KB   256     20.1%             2eb4a4dd-2bbc-46a3-9f64-4e761509307d  rack1
+        UN  172.17.0.12  74.14 KB   256     20.2%             a2547289-0c6a-458f-b982-823711c5293e  rack1
+        UN  172.17.0.3   74.19 KB   256     20.3%             3667cc1a-1f63-4cd1-bebc-841f428a0f4d  rack1
+        UN  172.17.0.2   74.24 KB   256     20.3%             2b48c8ac-ad68-48a0-9c41-c8f2fb7f38e6  rack1
+        UN  172.17.0.7   67.7 KB    256     19.2%             e361f6d8-28ef-4cf8-baa1-88c2d1fec094  rack1
+        UN  172.17.0.6   74.15 KB   256     19.6%             230f13b1-a27b-44e8-9b51-5ebdb1c4cb13  rack1
+        UN  172.17.0.4   74.18 KB   256     18.8%             6c90cbaa-e5b3-41de-a160-3ecaf59b8856  rack1
 
-    ./scripts/nuke.sh 10
+4. When you're tired of your cluster, nuke them with:
+
+        ./scripts/nuke.sh 10
 
 
 Cassandra cluster + OpsCenter monitoring
