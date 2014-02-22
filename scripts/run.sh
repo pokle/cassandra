@@ -15,6 +15,6 @@ docker run -d -name ${PREFIX}1 $IMAGE
 SEED=$(./ipof.sh ${PREFIX}1)
 
 for (( instance=$HOW_MANY; $instance > 1; instance=$instance - 1 )); do
-	docker run -d -name ${PREFIX}${instance} $IMAGE start.sh $SEED
+	docker run -d -name ${PREFIX}${instance} $IMAGE start $SEED
 done
 
