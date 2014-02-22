@@ -4,6 +4,8 @@
 # 
 # usage: ./run.sh NUMBER
 
+cd $(dirname $0)
+
 HOW_MANY=${1-1}
 IMAGE=${2-poklet/cassandra}
 
