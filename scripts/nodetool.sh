@@ -15,4 +15,4 @@ fi
 
 HOST=$(./ipof.sh $CONTAINER)
 
-docker run -rm -i -t poklet/cassandra nodetool --host $HOST $@
+docker run --rm -i -t poklet/cassandra nodetool --host $HOST $@
