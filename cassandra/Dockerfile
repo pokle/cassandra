@@ -5,8 +5,8 @@
 FROM centos
 
 # Install HotSpot JDK 7u51
-RUN wget -q -O - --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F" "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.rpm" > /tmp/jdk-7u51-linux-x64.rpm
-RUN rpm -ivh /tmp/jdk-7u51-linux-x64.rpm && rm /tmp/jdk-7u51-linux-x64.rpm
+RUN wget -q -O - --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.rpm" > /tmp/jdk.rpm
+RUN rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm
 RUN alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
 
 # Install packges (sshd + supervisord + monitoring tools + cassandra)
