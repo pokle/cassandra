@@ -29,7 +29,7 @@ Prerequisites
     
 - If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
 
-- Build the docker and opscenter images (optional)
+- Build the cassandra and opscenter images (optional)
 
 		./cassandra/build.sh
 		./opscenter/build.sh
