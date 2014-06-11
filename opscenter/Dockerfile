@@ -2,7 +2,7 @@
 #
 # VERSION		1.0
 
-FROM centos
+FROM tianon/centos:6.5
 
 # Install datastax OpsCenter
 ADD src/datastax.repo /etc/yum.repos.d/datastax.repo
