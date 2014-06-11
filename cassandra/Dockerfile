@@ -2,10 +2,11 @@
 #
 # VERSION               1.0
 
-FROM centos
+FROM tianon/centos:6.5
 
 # Install HotSpot JDK 7u51
-RUN wget -q -O - --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.rpm" > /tmp/jdk.rpm
+RUN yum install -y wget
+RUN wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm" 
 RUN rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm
 RUN alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
 
@@ -35,12 +36,9 @@ RUN mkdir -p /var/log/supervisor
 # Deploy startup script
 ADD src/start.sh /usr/local/bin/start
 
-# Necessary since cassandra try to override the system limitations
+# Necessary since cassandra is trying to override the system limitations
 # See https://groups.google.com/forum/#!msg/docker-dev/8TM_jLGpRKU/dewIQhcs7oAJ
 RUN rm -f /etc/security/limits.d/cassandra.conf
-# Necassary to make df tool run correctly
-# See https://groups.google.com/d/msg/docker-user/zC_wX1Uyl_U/Q5Ex5kg1VQ0J
-RUN ln -s /proc/mounts /etc/mtab
 
 EXPOSE 7199 7000 7001 9160 9042
 EXPOSE 22 8012 61621
