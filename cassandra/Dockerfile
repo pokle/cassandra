@@ -6,11 +6,11 @@ FROM tianon/centos:6.5
 
 # Install HotSpot JDK 7u51
 RUN yum install -y wget
-RUN wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm" 
+RUN wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u11-b12/jdk-8u11-linux-x64.rpm" 
 RUN rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm
 RUN alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
 
-# Install packges (sshd + supervisord + monitoring tools + cassandra)
+# Install packages (sshd + supervisord + monitoring tools + cassandra)
 ADD src/epel6.repo /etc/yum.repos.d/epel6.repo
 ADD src/datastax.repo /etc/yum.repos.d/datastax.repo
 RUN yum install -y openssh-server openssh-clients 
