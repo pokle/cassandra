@@ -5,7 +5,7 @@
 FROM tianon/centos:6.5
 
 # Install HotSpot JDK 7u51
-RUN yum install -y wget
+RUN yum install -y wget tar
 RUN wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u11-b12/jdk-8u11-linux-x64.rpm" 
 RUN rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm
 RUN alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
