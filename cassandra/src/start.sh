@@ -16,6 +16,14 @@ sed -i -e "s/^rpc_address.*/rpc_address: 0.0.0.0/"              $CONFIG/cassandr
 sed -i -e "s/- seeds: \"127.0.0.1\"/- seeds: \"$SEEDS\"/"       $CONFIG/cassandra.yaml
 sed -i -e "s/# JVM_OPTS=\"$JVM_OPTS -Djava.rmi.server.hostname=<public name>\"/ JVM_OPTS=\"$JVM_OPTS -Djava.rmi.server.hostname=$IP\"/" $CONFIG/cassandra-env.sh
 
+if [[ $SNITCH ]]; then
+  sed -i -e "s/endpoint_snitch: SimpleSnitch/endpoint_snitch: $SNITCH/" $CONFIG/cassandra.yaml
+fi
+if [[ $DC && $RACK ]]; then
+  echo "dc=$DC" > $CONFIG/cassandra-rackdc.properties
+  echo "rack=$RACK" >> $CONFIG/cassandra-rackdc.properties
+fi
+
 # Start process
 echo Starting Cassandra on $IP...
 /usr/bin/supervisord 
