@@ -4,6 +4,11 @@ IP=`hostname --ip-address`
 if [ $# == 1 ]; then SEEDS="$1,$IP"; 
 else SEEDS="$IP"; fi
 
+#if this container was linked to any other cassandra nodes, use them as seeds as well.
+if [[ `env | grep _PORT_9042_TCP_ADDR` ]]; then
+  SEEDS="$SEEDS,$(env | grep _PORT_9042_TCP_ADDR | sed 's/.*_PORT_9042_TCP_ADDR=//g' | sed -e :a -e N -e 's/\n/,/' -e ta)"
+fi
+
 echo Configuring Cassandra to listen at $IP with seeds $SEEDS
 
 # Setup Cassandra
