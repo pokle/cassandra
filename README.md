@@ -155,6 +155,26 @@ You should see something like:
 
         ./scripts/nuke.sh 10
 
+Set snitch and node location
+----------------------------
+
+The snitch type and node location information can be configured with environment variables.
+The datacenter and rack configuration is only valid if using the GossipingPropertyFileSnitch type snitch.
+For example:
+
+		docker run -d -name cass1 -e SNITCH=GossipingPropertyFileSnitch -e DC=SFO -e RACK=RAC3 poklet/cassandra
+
+This will set the snitch type and set the datacenter to **SFO** and the rack to **RAC3**
+
+Auto-detect seeds
+-----------------
+
+Any containers linked in the run command will also be added to the seed list.  The 3-node cluster example above may also be written as:
+
+		docker run -d -name cass1 poklet/cassandra
+		docker run -d -name cass2 --link cass1:cass1 poklet/cassandra
+		docker run -d -name cass3 --link cass1:cass1 poklet/cassandra
+		# and so on...
 
 Cassandra cluster + OpsCenter monitoring
 ----------------------------------------

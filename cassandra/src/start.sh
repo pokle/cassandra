@@ -4,6 +4,11 @@ IP=`hostname --ip-address`
 if [ $# == 1 ]; then SEEDS="$1,$IP"; 
 else SEEDS="$IP"; fi
 
+#if this container was linked to any other cassandra nodes, use them as seeds as well.
+if [[ `env | grep _PORT_9042_TCP_ADDR` ]]; then
+  SEEDS="$SEEDS,$(env | grep _PORT_9042_TCP_ADDR | sed 's/.*_PORT_9042_TCP_ADDR=//g' | sed -e :a -e N -e 's/\n/,/' -e ta)"
+fi
+
 echo Configuring Cassandra to listen at $IP with seeds $SEEDS
 
 # Setup Cassandra
@@ -15,6 +20,14 @@ sed -i -e "s/^listen_address.*/listen_address: $IP/"            $CONFIG/cassandr
 sed -i -e "s/^rpc_address.*/rpc_address: 0.0.0.0/"              $CONFIG/cassandra.yaml
 sed -i -e "s/- seeds: \"127.0.0.1\"/- seeds: \"$SEEDS\"/"       $CONFIG/cassandra.yaml
 sed -i -e "s/# JVM_OPTS=\"$JVM_OPTS -Djava.rmi.server.hostname=<public name>\"/ JVM_OPTS=\"$JVM_OPTS -Djava.rmi.server.hostname=$IP\"/" $CONFIG/cassandra-env.sh
+
+if [[ $SNITCH ]]; then
+  sed -i -e "s/endpoint_snitch: SimpleSnitch/endpoint_snitch: $SNITCH/" $CONFIG/cassandra.yaml
+fi
+if [[ $DC && $RACK ]]; then
+  echo "dc=$DC" > $CONFIG/cassandra-rackdc.properties
+  echo "rack=$RACK" >> $CONFIG/cassandra-rackdc.properties
+fi
 
 # Start process
 echo Starting Cassandra on $IP...
