@@ -16,7 +16,7 @@ fi
 echo Configuring Cassandra to listen at $IP with seeds $SEEDS
 
 # Setup Cassandra
-DEFAULT=/etc/cassandra/default.conf
+DEFAULT=${DEFAULT:-/etc/cassandra/default.conf}
 CONFIG=/etc/cassandra/conf
 
 rm -rf $CONFIG && cp -r $DEFAULT $CONFIG
