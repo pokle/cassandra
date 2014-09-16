@@ -26,7 +26,7 @@ Prerequisites
 		$ docker version
 		Client version: 0.7.4
     ...
-    
+
 - If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
 
 - Build the cassandra and opscenter images (optional)
@@ -48,14 +48,14 @@ Single Cassandra node
 
 2. Connect to it using `cqlsh`:
 
-		docker run -i -t poklet/cassandra cqlsh $(./scripts/ipof.sh cass1) 
+		docker run -i -t poklet/cassandra cqlsh $(./scripts/ipof.sh cass1)
 
 You should see something like:
 
 	Connected to Test Cluster at 172.17.0.25:9160.
 	[cqlsh 4.1.0 | Cassandra 2.0.3 | CQL spec 3.1.1 | Thrift protocol 19.38.0]
 	Use HELP for help.
-	cqlsh> 
+	cqlsh>
 
 
 3-node Cassandra cluster
@@ -151,7 +151,7 @@ You should see something like:
         UN  172.17.0.6   74.15 KB   256     19.6%             230f13b1-a27b-44e8-9b51-5ebdb1c4cb13  rack1
         UN  172.17.0.4   74.18 KB   256     18.8%             6c90cbaa-e5b3-41de-a160-3ecaf59b8856  rack1
 
-4. When you're tired of your cluster, nuke them with:
+4. When you're tired of your cluster, nuke it with:
 
         ./scripts/nuke.sh 10
 
@@ -176,13 +176,21 @@ Any containers linked in the run command will also be added to the seed list.  T
 		docker run -d -name cass3 --link cass1:cass1 poklet/cassandra
 		# and so on...
 
+Specifying seeds
+----------------
+
+When starting a container, you can pass the SEEDS environment variable to override the seeds like so:
+
+    docker run -e SEEDS=a,b,c... poklet/cassandra
+
+
 Cassandra cluster + OpsCenter monitoring
 ----------------------------------------
 
 1. Start a Cassandra cluster with 3 nodes:
 
 		./scripts/run.sh 3
-		
+
 2. Start the OpsCenter container:
 
 		docker run -d -name opscenter poklet/opscenter
@@ -197,4 +205,3 @@ Cassandra cluster + OpsCenter monitoring
 	- In the popup, click "Enter Credentials" link and fill form with username `opscenter` and password `opscenter`. Click "Done".
 	- Click "Install on all nodes" and then "Accept Fingerprints". OpsCenter installs agent on cluster'snodes remotly.
 	- Once done, you should see the "All agents connected" message.
-
