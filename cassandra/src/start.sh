@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 IP=`hostname --ip-address`
-if [ $# == 1 ]; then SEEDS="$1,$IP"; 
-else SEEDS="$IP"; fi
+
+# Accept seeds via docker run -e SEEDS=seed1,seed2,...
+SEEDS=${SEEDS:-$IP}
+
+# Backwards compatibility with older scripts that just passed the seed in
+if [ $# == 1 ]; then SEEDS="$1,$SEEDS"; fi
 
 #if this container was linked to any other cassandra nodes, use them as seeds as well.
 if [[ `env | grep _PORT_9042_TCP_ADDR` ]]; then
@@ -31,4 +35,4 @@ fi
 
 # Start process
 echo Starting Cassandra on $IP...
-/usr/bin/supervisord 
+/usr/bin/supervisord
