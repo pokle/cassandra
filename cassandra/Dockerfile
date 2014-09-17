@@ -4,30 +4,26 @@
 
 FROM tianon/centos:6.5
 
-# Install Java
-RUN yum install -y wget tar
-RUN wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm"
-RUN rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm
-RUN alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
-
-# Install packages (sshd + supervisord + monitoring tools + cassandra)
+# Add source repositories
 ADD src/epel6.repo /etc/yum.repos.d/epel6.repo
 ADD src/datastax.repo /etc/yum.repos.d/datastax.repo
-RUN yum install -y openssh-server openssh-clients
-RUN yum install -y supervisor
-RUN yum install -y dsc20
-RUN yum install -y sysstat sudo which
+
+# Install Java, Install packages (sshd + supervisord + monitoring tools + cassandra)
+RUN yum install -y wget tar openssh-server openssh-clients supervisor dsc20 sysstat sudo which && \
+	yum clean all && \
+	wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm" && \
+	rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm && \
+	alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
 
 # Configure SSH server
-RUN mkdir -p /var/run/sshd && chmod -rx /var/run/sshd
-RUN ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-RUN sed -ri 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
-
 # Create OpsCenter account
-RUN useradd -m -G users,root -p $(openssl passwd -1 "opscenter") opscenter
-RUN echo "%root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN mkdir -p /var/run/sshd && chmod -rx /var/run/sshd && \
+	ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key && \
+	sed -ri 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config && \
+	sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
+	sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config && \
+	useradd -m -G users,root -p $(openssl passwd -1 "opscenter") opscenter && \
+	echo "%root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Configure supervisord
 ADD src/supervisord.conf /etc/supervisord.conf
