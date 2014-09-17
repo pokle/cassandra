@@ -176,13 +176,14 @@ Any containers linked in the run command will also be added to the seed list.  T
 		docker run -d -name cass3 --link cass1:cass1 poklet/cassandra
 		# and so on...
 
-Specifying seeds
-----------------
+Specifying clustering parameters
+--------------------------------
 
-When starting a container, you can pass the SEEDS environment variable to override the seeds like so:
+When starting a container, you can pass the SEEDS, LISTEN_ADDRESS environment variables to override the defaults:
 
-    docker run -e SEEDS=a,b,c... poklet/cassandra
+    docker run -e SEEDS=a,b,c... -e LISTEN_ADDRESS=10.2.1.4 poklet/cassandra
 
+Note that listen_address will also be used for broadcast_address
 
 Cassandra cluster + OpsCenter monitoring
 ----------------------------------------
