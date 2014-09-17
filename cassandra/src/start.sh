@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-IP=`hostname --ip-address`
+# Accept listen_address
+IP=${LISTEN_ADDRESS:-`hostname --ip-address`}
 
 # Accept seeds via docker run -e SEEDS=seed1,seed2,...
 SEEDS=${SEEDS:-$IP}
