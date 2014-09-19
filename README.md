@@ -46,13 +46,10 @@ Single Cassandra node
 
     You can also add the `-p 9042:9042` option to bind container's 9042 port (CQL / native transport port) to host's 9042 port.
 
-2. Connect to it using `cqlsh`:
-
-        docker run -i -t poklet/cassandra cqlsh $(./scripts/ipof.sh cass1)
-
-3. Connect to it using `cqlsh` and links
-
-        docker run -it --rm --link cass1:cass1 poklet/cassandra bash -c 'cqlsh $CASS1_PORT_9160_TCP_ADDR'
+2. Connect to it using `cqlsh` 
+        
+        docker run -it --rm --link cass1:cass poklet/cassandra cqlsh cass
+        
 
     You should see something like:
 
