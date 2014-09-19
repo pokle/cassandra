@@ -58,7 +58,7 @@ Single Cassandra node
         Use HELP for help.
         cqlsh>
 
-    3.1 __Pre-populate Cassandra with a script__
+3. __Pre-populate Cassandra with a script__
 
     First we write a script that, for example, creates a table an inserts some data
 
