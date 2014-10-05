@@ -1,0 +1,55 @@
+#!/usr/bin/python
+
+from jinja2 import Environment, FileSystemLoader
+import sys, argparse, os, shutil, stat
+from subprocess import call
+
+
+default_version = "2.1"
+
+version_to_packge = {"2.1" : "dsc21",
+                    "2.0" : "dsc20"}
+
+
+def main(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', help='cassandra version to use', choices=version_to_packge, default=default_version)
+    parser.add_argument('-l', help='show available versions', action='store_true' )
+    parser.add_argument('-b', help='build image at the end (calls docker build ...)', action='store_true', default=False)
+
+    args = parser.parse_args()
+    if args.l:
+        print version_to_packge
+        sys.exit(0)
+
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+
+    version = args.v
+    cassandra_version_directory = version
+    package = version_to_packge.get(args.v, default_version)
+
+    env = Environment(loader=FileSystemLoader('templates'))
+    dockerfile_template = env.get_template('Dockerfile.j2')
+    build_template = env.get_template('build.j2')
+
+    print "Generating Dockerfile with cassandra version " + version +" based on package " + package
+    copy_and_overwrite(cassandra_version_directory)
+
+    dockerfile_template.stream(cassandra_package=package).dump(cassandra_version_directory + '/Dockerfile')
+    build_template.stream(cassandra_tag=version).dump(cassandra_version_directory + '/build.sh')
+
+    st = os.stat(cassandra_version_directory + '/build.sh')
+    os.chmod(cassandra_version_directory + '/build.sh', st.st_mode | stat.S_IEXEC)
+
+    if args.b:
+        call([cassandra_version_directory + "/build.sh"])
+
+def copy_and_overwrite(to_path):
+    if os.path.exists(to_path):
+        shutil.rmtree(to_path)
+    shutil.copytree("src", to_path + "/src")
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

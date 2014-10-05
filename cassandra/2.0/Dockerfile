@@ -9,7 +9,7 @@ ADD src/epel6.repo /etc/yum.repos.d/epel6.repo
 ADD src/datastax.repo /etc/yum.repos.d/datastax.repo
 
 # Install Java, Install packages (sshd + supervisord + monitoring tools + cassandra)
-RUN yum install -y wget tar openssh-server openssh-clients supervisor dsc21 sysstat sudo which && \
+RUN yum install -y wget tar openssh-server openssh-clients supervisor dsc20 sysstat sudo which && \
 	yum clean all && \
 	wget --progress=dot:giga -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm" && \
 	rpm -ivh /tmp/jdk.rpm && rm /tmp/jdk.rpm && \
