@@ -20,24 +20,24 @@ pip install -r requirements.txt
 Generate directory 2.1 with Dockerfile and build.sh script:
 
 ```bash
-./generate.py -v 2.1
+./generate -v 2.1
 ```
 
 ####Generate Directory and build image:
 
 ```bash
-./generate.py -v 2.1 -b
+./generate -v 2.1 -b
 ```
 
 ####List versions
 
 ```bash
-./generate.py -l
+./generate -l
 ```
 
 ####Help
 
 ```bash
-./generate.py -h
+./generate -h
 ```
 
