@@ -4,22 +4,21 @@ from jinja2 import Environment, FileSystemLoader
 import sys, argparse, os, shutil, stat
 from subprocess import call
 
-
-default_version = "2.1"
-
-version_to_packge = {"2.1" : "dsc21",
+version_to_package = {
+                    "latest" : "dsc21",
+                    "2.1" : "dsc21",
                     "2.0" : "dsc20"}
 
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', help='cassandra version to use', choices=version_to_packge, default=default_version)
+    parser.add_argument('-v', help='cassandra version to use', choices=version_to_package, default="latest")
     parser.add_argument('-l', help='show available versions', action='store_true' )
     parser.add_argument('-b', help='build image at the end (calls docker build ...)', action='store_true', default=False)
 
     args = parser.parse_args()
     if args.l:
-        print version_to_packge
+        print version_to_package
         sys.exit(0)
 
     abspath = os.path.abspath(__file__)
@@ -28,7 +27,7 @@ def main(argv):
 
     version = args.v
     cassandra_version_directory = version
-    package = version_to_packge.get(args.v, default_version)
+    package = version_to_package.get(args.v, "latest")
 
     env = Environment(loader=FileSystemLoader('templates'))
     dockerfile_template = env.get_template('Dockerfile.j2')
