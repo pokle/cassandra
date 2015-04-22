@@ -42,7 +42,7 @@ Single Cassandra node
 
 1. Launch a server called cass1:
 
-        docker run -d -name cass1 poklet/cassandra
+        docker run -d --name cass1 poklet/cassandra
 
     You can also add the `-p 9042:9042` option to bind container's 9042 port (CQL / native transport port) to host's 9042 port.
 
@@ -112,9 +112,9 @@ Single Cassandra node
 
 1. Launch three containers:
 
-        docker run -d -name cass1 poklet/cassandra start
-        docker run -d -name cass2 poklet/cassandra start $(./scripts/ipof.sh cass1)
-        docker run -d -name cass3 poklet/cassandra start $(./scripts/ipof.sh cass1)
+        docker run -d --name cass1 poklet/cassandra start
+        docker run -d --name cass2 poklet/cassandra start $(./scripts/ipof.sh cass1)
+        docker run -d --name cass3 poklet/cassandra start $(./scripts/ipof.sh cass1)
         # and so on...
 
     The `start` script is passed the list of seeds - in this case, just the cass1's IP
@@ -211,7 +211,7 @@ The snitch type and node location information can be configured with environment
 The datacenter and rack configuration is only valid if using the GossipingPropertyFileSnitch type snitch.
 For example:
 
-        docker run -d -name cass1 -e SNITCH=GossipingPropertyFileSnitch -e DC=SFO -e RACK=RAC3 poklet/cassandra
+        docker run -d --name cass1 -e SNITCH=GossipingPropertyFileSnitch -e DC=SFO -e RACK=RAC3 poklet/cassandra
 
 This will set the snitch type and set the datacenter to **SFO** and the rack to **RAC3**
 
@@ -220,9 +220,9 @@ Auto-detect seeds
 
 Any containers linked in the run command will also be added to the seed list.  The 3-node cluster example above may also be written as:
 
-        docker run -d -name cass1 poklet/cassandra
-        docker run -d -name cass2 --link cass1:cass1 poklet/cassandra
-        docker run -d -name cass3 --link cass1:cass1 poklet/cassandra
+        docker run -d --name cass1 poklet/cassandra
+        docker run -d --name cass2 --link cass1:cass1 poklet/cassandra
+        docker run -d --name cass3 --link cass1:cass1 poklet/cassandra
         # and so on...
 
 Specifying clustering parameters
@@ -243,7 +243,7 @@ Cassandra cluster + OpsCenter monitoring
 
 2. Start the OpsCenter container:
 
-        docker run -d -name opscenter poklet/opscenter
+        docker run -d --name opscenter poklet/opscenter
 
     You can also add the `-p 8888:8888` option to bind container's 8888 port to host's 8888 port
 
