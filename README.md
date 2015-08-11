@@ -20,21 +20,14 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-- A host running Docker - See [https://www.docker.com](https://www.docker.com)
-- You need to be able to run the docker command successfully as the currently logged in user. For example:
-
-        $ docker version
-        Client version: 0.7.4
-    ...
-
-- If you're running as a user that can't run docker, add yourself to the docker group, or checkout out the project as root before you proceed. sudo might work too.
-
+- Docker - See [https://www.docker.com](https://www.docker.com)
+- Verify that the docker command works. Try running 'docker ps' for example.
 - Build the cassandra and opscenter images (optional)
 
         ./cassandra/build.sh
         ./opscenter/build.sh
 
-The last step is optional because Docker will automatically pull the images from [index.docker.io](https://index.docker.io) if you don't already have them. The build process needs an Internet connection, but it is executed only once and then cached on Docker. If you modify the scripts, this is how you can re-build the images with your changes.
+The last step is optional because Docker will automatically pull the images from [index.docker.io](https://index.docker.io) if you don't already have them. The build process needs an Internet connection, but it is executed only once and then cached on Docker. If you modify the scripts, this is also how you can re-build the images with your changes.
 
 
 Single Cassandra node
