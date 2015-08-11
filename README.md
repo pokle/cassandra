@@ -20,7 +20,7 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-- A host running Docker - See https://www.docker.io/gettingstarted/#h_installation
+- A host running Docker - See [https://www.docker.com](https://www.docker.com)
 - You need to be able to run the docker command successfully as the currently logged in user. For example:
 
         $ docker version
