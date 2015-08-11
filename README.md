@@ -85,24 +85,24 @@ Here's how to start a Cassandra cluster with a single node, and run some CQL on 
 3-node Cassandra cluster
 ------------------------
 
-1. Launch three containers:
+1. Launch three containers (one seed plus two more)
 
         docker run -d --name cass1 poklet/cassandra start
-        docker run -d --name cass2 poklet/cassandra start $(./scripts/ipof.sh cass1)
-        docker run -d --name cass3 poklet/cassandra start $(./scripts/ipof.sh cass1)
-        # and so on...
+        docker run -d --name cass2 --link cass1:seed poklet/cassandra start seed
+        docker run -d --name cass3 --link cass1:seed poklet/cassandra start seed
 
-    The `start` script is passed the list of seeds - in this case, just the cass1's IP
 
-2. Connect to it using `nodetool`:
+    Note: The poklet/cassandra docker image contains a shell script called `start` that takes an optional seed host. We use `--link cass1:seed` to name the cass1 host as our seed host.
 
-        docker run -i -t poklet/cassandra nodetool -h $(./scripts/ipof.sh cass1) status
+2. Run `nodetool status` on cass1 to check the cluster status:
+
+        docker run -it --rm --link cass1:c poklet/cassandra nodetool -h c status
 
 3. Create some data on the first container:
 
     Launch `cqlsh`:
 
-        docker run -i -t poklet/cassandra cqlsh $(./scripts/ipof.sh cass1)
+        docker run -it --rm --link cass1:c poklet/cassandra cqlsh c
 
     Paste this in:
 
@@ -110,13 +110,14 @@ Here's how to start a Cassandra cluster with a single node, and run some CQL on 
         use demo;
         create table names ( id int primary key, name text );
         insert into names (id,name) values (1, 'gibberish');
-        quit
+        quit;
+        
 
 4. Connect to the second container, and check if it can see your data:
 
     Start up `cqlsh` (on cass2 this time):
 
-        docker run -i -t poklet/cassandra cqlsh $(./scripts/ipof.sh cass2)
+        docker run -it --rm --link cass2:c poklet/cassandra cqlsh c
 
     Paste in:
 
