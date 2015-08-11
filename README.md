@@ -16,7 +16,7 @@ If you'd like to help, please get in touch with me, and/or send me pull requests
 Prerequisites
 -------------
 
-- Docker - See [https://www.docker.com](https://www.docker.com)
+- A recent version of Docker - See [https://www.docker.com](https://www.docker.com)
 - Verify that the docker command works. Try running 'docker ps' for example.
 - Build the cassandra and opscenter images (optional)
 
@@ -36,9 +36,8 @@ Here's how to start a Cassandra cluster with a single node, and run some CQL on 
         docker run --detach --name cassone poklet/cassandra
 
 2. Connect to it using cqlsh
-        
-        docker run -it --rm --link cassone:cass poklet/cassandra cqlsh cass
-        
+
+        docker run -it --rm --net container:cassone poklet/cassandra cqlsh
 
     You should see something like:
 
@@ -96,13 +95,13 @@ Here's how to start a Cassandra cluster with a single node, and run some CQL on 
 
 2. Run `nodetool status` on cass1 to check the cluster status:
 
-        docker run -it --rm --link cass1:c poklet/cassandra nodetool -h c status
+        docker run -it --rm --net container:cass1 poklet/cassandra nodetool status
 
 3. Create some data on the first container:
 
     Launch `cqlsh`:
 
-        docker run -it --rm --link cass1:c poklet/cassandra cqlsh c
+        docker run -it --rm --net container:cass1 poklet/cassandra cqlsh
 
     Paste this in:
 
@@ -117,7 +116,7 @@ Here's how to start a Cassandra cluster with a single node, and run some CQL on 
 
     Start up `cqlsh` (on cass2 this time):
 
-        docker run -it --rm --link cass2:c poklet/cassandra cqlsh c
+        docker run -it --rm --net container:cass2 poklet/cassandra cqlsh
 
     Paste in:
 

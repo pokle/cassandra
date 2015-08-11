@@ -13,4 +13,4 @@ if [ -z "$CONTAINER" ]; then
 	exit 1
 fi
 
-docker run -it --rm --link $CONTAINER:$CONTAINER poklet/cassandra nodetool --host $CONTAINER $@
+docker run -it --rm --net container:"$CONTAINER" poklet/cassandra nodetool $@
