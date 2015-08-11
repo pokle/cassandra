@@ -10,10 +10,6 @@ These images are great to provision ephemeral Cassandra topologies for testing a
     - A multi-node cluster - running on a single Docker host
     - Monitored cluster using OpsCenter
 
-- Work in progress:
-    - A small cluster for production - running on multiple Docker hosts
-        - The missing puzzle piece here is how to expose Cassandra on the real outside network so that peers running on different hosts can connect.
-
 If you'd like to help, please get in touch with me, and/or send me pull requests.
 
 
@@ -31,73 +27,59 @@ The last step is optional because Docker will automatically pull the images from
 
 
 Single Cassandra node
----------------------
+-----------------------------------
+Here's how to start a Cassandra cluster with a single node, and run some CQL on it. These instructions use the docker command directly to demonstrate what's happening behind the scenes. 
 
-1. Launch a server called cass1:
 
-        docker run -d --name cass1 poklet/cassandra
+1. Launch a container running Cassandra called cassone:
 
-    You can also add the `-p 9042:9042` option to bind container's 9042 port (CQL / native transport port) to host's 9042 port.
+        docker run --detach --name cassone poklet/cassandra
 
-2. Connect to it using `cqlsh` 
+2. Connect to it using cqlsh
         
-        docker run -it --rm --link cass1:cass poklet/cassandra cqlsh cass
+        docker run -it --rm --link cassone:cass poklet/cassandra cqlsh cass
         
 
     You should see something like:
 
-        Connected to Test Cluster at 172.17.0.25:9160.
-        [cqlsh 4.1.0 | Cassandra 2.0.3 | CQL spec 3.1.1 | Thrift protocol 19.38.0]
-        Use HELP for help.
-        cqlsh>
+        [cqlsh 5.0.1 | Cassandra 2.2.0 | CQL spec 3.3.0 | Native protocol v4]
+		Use HELP for help.
+		cqlsh> quit
 
-3. __Pre-populate Cassandra with a script__
-
-    First we write a script that, for example, creates a table an inserts some data
-
-        mkdir -p /data/cassandra/scripts
-        vi /data/cassandra/scripts/init.cql
-
-    In this script, we will define a `Keyspace`, create a table and add some data:
-
-        CREATE KEYSPACE test_keyspace WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
-        USE test_keyspace;
+	If not, then try it again in a few seconds - cassandra might still be starting up.
 
 
-         CREATE TABLE test_table (
-          id text,
-          test_value text,
-          PRIMARY KEY (id)
-         );
+3. Lets try some CQL
+
+	Paste the following into your cqlsh prompt to create a test keyspace, and a test table:
+
+		CREATE KEYSPACE test_keyspace WITH REPLICATION = 
+		{'class': 'SimpleStrategy', 'replication_factor': 1};
+		
+		USE test_keyspace;
+		
+		CREATE TABLE test_table (
+		  id text,
+		  test_value text,
+		  PRIMARY KEY (id)
+		);
+		
+		INSERT INTO test_table (id, test_value) VALUES ('1', 'one');
+		INSERT INTO test_table (id, test_value) VALUES ('2', 'two');
+		INSERT INTO test_table (id, test_value) VALUES ('3', 'three');
+		
+		SELECT * FROM test_table;
 
 
-        INSERT INTO test_table (id, test_value) VALUES ('1', 'one');
-
-        INSERT INTO test_table (id, test_value) VALUES ('2', 'two');
-
-        INSERT INTO test_table (id, test_value) VALUES ('3', 'three');
-
-        SELECT * FROM test_table;
-
-    Then, we run our docker container mounting a volume where our script is saved and called it through `cqlsh`
-
-        docker run -it --rm --link cass1:cass1 -v /data/cassandra/scripts:/data poklet/cassandra bash -c 'cqlsh $CASS1_PORT_9160_TCP_ADDR -f /data/init.cql'
-
-    You should see the result table:
-
-
-        -> % docker run -it --rm --link cass1:cass1 -v /data/cassandra/scripts:/data poklet/cassandra bash -c 'cqlsh $CASS1_PORT_9160_TCP_ADDR -f /data/init.cql'
-
-        system  test_keyspace  system_traces
-
-
-         id | test_value
-        ----+------------
-          3 |      three
-          2 |        two
-          1 |        one
-
-        (3 rows)
+	If that worked, you should see:
+	
+		 id | test_value
+		----+------------
+		  3 |      three
+		  2 |        two
+		  1 |        one
+		
+		(3 rows)
 
 
 3-node Cassandra cluster
