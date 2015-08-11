@@ -22,5 +22,4 @@ for (( instance=$HOW_MANY; $instance > 0; instance=$instance - 1 )); do
 done
 
 
-docker kill $CONTAINERS
-docker rm $CONTAINERS
+docker rm -f $CONTAINERS

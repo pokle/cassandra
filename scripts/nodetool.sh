@@ -13,6 +13,4 @@ if [ -z "$CONTAINER" ]; then
 	exit 1
 fi
 
-HOST=$(./ipof.sh $CONTAINER)
-
-docker run --rm -i -t poklet/cassandra nodetool --host $HOST $@
+docker run -it --rm --link $CONTAINER:$CONTAINER poklet/cassandra nodetool --host $CONTAINER $@
