@@ -1,0 +1,42 @@
+x-cassandra: &cassandra
+  image: cassandra:5
+  environment: &cassandra-env
+    MAX_HEAP_SIZE: 1G
+    HEAP_NEWSIZE: 256M
+  networks: [cassandra]
+  # Serialise joins via healthcheck — Cassandra 4+ uses only 16 vnode tokens by
+  # default, so simultaneous bootstraps can pick colliding tokens and one node
+  # gets stuck in JOINING.
+  healthcheck:
+    test: ["CMD-SHELL", "nodetool info | grep -q 'Native Transport active: true'"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 30s
+
+services:
+  cass1:
+    <<: *cassandra
+    container_name: cass1
+
+  cass2:
+    <<: *cassandra
+    container_name: cass2
+    environment:
+      <<: *cassandra-env
+      CASSANDRA_SEEDS: cass1
+    depends_on:
+      cass1: { condition: service_healthy }
+
+  cass3:
+    <<: *cassandra
+    container_name: cass3
+    environment:
+      <<: *cassandra-env
+      CASSANDRA_SEEDS: cass1
+    depends_on:
+      cass2: { condition: service_healthy }
+
+networks:
+  cassandra:
+    name: cassandra

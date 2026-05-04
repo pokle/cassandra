@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
+# Run nodetool inside the network namespace of an existing Cassandra container.
+set -euo pipefail
 
-cd $(dirname $0)
+IMAGE=${IMAGE:-cassandra:5}
+CONTAINER=${1:-}
+shift || true
 
-CONTAINER=$1
-shift
+if [[ -z $CONTAINER ]]; then
+  cat <<EOF
+usage: $0 CONTAINER ARGS...
+  ARGS are passed to nodetool, executed inside CONTAINER's network namespace.
 
-if [ -z "$CONTAINER" ]; then
-	echo usage: $0 CONTAINER ARGS...
-	echo   ARGS are passed to nodetool on CONTAINER
-	echo
-	echo   example: ./nodetool.sh cass3 status
-	exit 1
+example:
+  $0 cass1 status
+EOF
+  exit 1
 fi
 
-docker run -it --rm --net container:"$CONTAINER" poklet/cassandra nodetool $@
+docker run --rm --net "container:$CONTAINER" "$IMAGE" nodetool "$@"

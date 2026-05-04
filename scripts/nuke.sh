@@ -1,25 +1,31 @@
 #!/usr/bin/env bash
-#
-# Removes all trace of the test containers you created with run.sh
+# Stop and remove containers created by run.sh, and drop the shared network.
+set -euo pipefail
 
-HOW_MANY=${1}
-PREFIX=${2-cass}
+HOW_MANY=${1:-}
+PREFIX=${2:-cass}
+NETWORK=${NETWORK:-cassandra}
 
-if [[ ${#@} = 0 ]]; then
-  echo Stops and removes containers suffixed with a number
-  echo
-  echo usage: $0 NUMBER-OF-CONTAINERS [CONTAINER-PREFIX]
-  echo
-  echo Defaults: CONTAINER-PREFIX:$PREFIX
-  echo Example: $0 3      # => Nukes 3 Cassandra containers called cass1, cass2 & cass3
-  echo Example: $0 1 demo # => Nukes 1 Cassandra container called demo1
+if [[ -z $HOW_MANY ]]; then
+  cat <<EOF
+Nukes containers created by run.sh and removes the shared network.
+
+usage: $0 NUMBER-OF-NODES [HOSTNAME-PREFIX]
+
+env:
+  NETWORK  Docker network name (default: $NETWORK)
+
+examples:
+  $0 3              # nuke cass1..cass3 and the 'cassandra' network
+  $0 1 demo         # nuke demo1
+EOF
   exit 1
 fi
 
-
-for (( instance=$HOW_MANY; $instance > 0; instance=$instance - 1 )); do
-	CONTAINERS="$CONTAINERS ${PREFIX}${instance}"
+CONTAINERS=()
+for (( i=1; i <= HOW_MANY; i++ )); do
+  CONTAINERS+=("${PREFIX}${i}")
 done
 
-
-docker rm -f $CONTAINERS
+docker rm -f "${CONTAINERS[@]}" 2>/dev/null || true
+docker network rm "$NETWORK" 2>/dev/null || true

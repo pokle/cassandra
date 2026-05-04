@@ -1,7 +1,0 @@
-# Totally build file
-# See https://github.com/pokle/totally
-NAME="cassandra"
-BUILD_DIR="./cassandra"
-IMAGE="poklet/cassandra:latest"
-CONTAINER="$USER-$NAME"
-TUNNEL_PORT=12000
